@@ -67,7 +67,9 @@ function addListeners() {
 }
 
 function animaster() {
-    return {
+    const animationObject = {
+        _steps: [], // массив шагов анимации
+
         fadeIn,
         resetFadeIn,
         fadeOut,
@@ -79,6 +81,9 @@ function animaster() {
         showAndHide,
         heartBeating,
     }
+    animationObject.addMove = addMove.bind(animationObject)
+    animationObject.play = play.bind(animationObject)
+    return animationObject;
 
     /**
      * Блок плавно появляется из прозрачного.
@@ -172,6 +177,21 @@ function animaster() {
             scale(element, 500, 1.4)
             setTimeout(() => scale(element, 500, 1), 500);
         }, 1000);
+    }
+
+    function addMove(duration, translation) {
+        this._steps.push({duration, translation})
+        return this;
+    }
+
+    function play(element) {
+        let moveParameters = this._steps.shift();
+        this.move(element, moveParameters.duration, moveParameters.translation)
+        setTimeout(() => {
+            if (this._steps.length > 0) {
+                this.play(element)
+            }
+        }, moveParameters.duration)
     }
 }
 
