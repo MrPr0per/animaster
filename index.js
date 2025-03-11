@@ -196,6 +196,7 @@ function animaster() {
     function addFadeIn(duration) {
         this._steps.push({
             name: 'fadeIn',
+            duration,
             action: (element) => {
                 element.style.transitionDuration = `${duration}ms`;
                 element.classList.remove('hide');
@@ -208,6 +209,7 @@ function animaster() {
     function addFadeOut(duration) {
         this._steps.push({
             name: 'fadeOut',
+            duration,
             action: (element) => {
                 element.style.transitionDuration = `${duration}ms`;
                 element.classList.remove('show');
@@ -220,6 +222,7 @@ function animaster() {
     function addMove(duration, translation) {
         this._steps.push({
             name: 'move',
+            duration,
             action: (element) => {
                 element.style.transitionDuration = `${duration}ms`;
                 element.style.transform = getTransform(translation, null);
@@ -231,6 +234,7 @@ function animaster() {
     function addScale(duration, ratio) {
         this._steps.push({
             name: 'scale',
+            duration,
             action: (element) => {
                 element.style.transitionDuration = `${duration}ms`;
                 element.style.transform = getTransform(null, ratio);
