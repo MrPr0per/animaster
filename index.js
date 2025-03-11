@@ -82,23 +82,24 @@ function addListeners() {
 function animaster() {
     const animationObject = {
         _steps: [], // массив шагов анимации
-
-        fadeIn,
-        resetFadeIn,
-        fadeOut,
-        resetFadeOut,
-        move,
-        scale,
-        resetMoveAndScale,
-        moveAndHide,
-        showAndHide,
-        heartBeating,
     }
-    animationObject.addMove = addMove.bind(animationObject)
-    animationObject.addScale = addScale.bind(animationObject)
-    animationObject.play = play.bind(animationObject)
-    animationObject.addFadeIn = addFadeIn.bind(animationObject)
-    animationObject.addFadeOut = addFadeOut.bind(animationObject)
+    animationObject.addFadeIn = addFadeIn.bind(animationObject);
+    animationObject.addFadeOut = addFadeOut.bind(animationObject);
+    animationObject.addMove = addMove.bind(animationObject);
+    animationObject.addScale = addScale.bind(animationObject);
+
+    animationObject.fadeIn = fadeIn.bind(animationObject);
+    animationObject.resetFadeIn = resetFadeIn.bind(animationObject);
+    animationObject.fadeOut = fadeOut.bind(animationObject);
+    animationObject.resetFadeOut = resetFadeOut.bind(animationObject);
+    animationObject.move = move.bind(animationObject);
+    animationObject.scale = scale.bind(animationObject);
+    animationObject.resetMoveAndScale = resetMoveAndScale.bind(animationObject);
+    animationObject.moveAndHide = moveAndHide.bind(animationObject);
+    animationObject.showAndHide = showAndHide.bind(animationObject);
+    animationObject.heartBeating = heartBeating.bind(animationObject);
+
+    animationObject.play = play.bind(animationObject);
     return animationObject;
 
     /**
@@ -251,6 +252,13 @@ function animaster() {
                 this.play(element)
             }
         }, actionObject.duration)
+
+        let initialTransform = getTransform(element)
+        return {
+            reset() {
+                element.setTransform(initialTransform)
+            }
+        }
     }
 }
 
