@@ -96,6 +96,8 @@ function animaster() {
     }
     animationObject.addMove = addMove.bind(animationObject)
     animationObject.play = play.bind(animationObject)
+    animationObject.addFadeIn = addFadeIn.bind(animationObject)
+    animationObject.addFadeOut = addFadeOut.bind(animationObject)
     return animationObject;
 
     /**
@@ -104,9 +106,7 @@ function animaster() {
      * @param duration — Продолжительность анимации в миллисекундах
      */
     function fadeIn(element, duration) {
-        element.style.transitionDuration = `${duration}ms`;
-        element.classList.remove('hide');
-        element.classList.add('show');
+        this.addFadeIn(duration).play(element);
     }
 
     function resetFadeIn(element) {
@@ -121,9 +121,7 @@ function animaster() {
      * @param duration — Продолжительность анимации в миллисекундах
      */
     function fadeOut(element, duration) {
-        element.style.transitionDuration = `${duration}ms`;
-        element.classList.remove('show');
-        element.classList.add('hide');
+        this.addFadeOut(duration).play(element);
     }
 
     function resetFadeOut(element) {
@@ -131,7 +129,6 @@ function animaster() {
         element.classList.remove('hide');
         element.classList.add('show');
     }
-
 
     /**
      * Функция, передвигающая элемент
@@ -196,9 +193,34 @@ function animaster() {
         }
     }
 
+    function addFadeIn(duration) {
+        this._steps.push({
+            name: 'fadeIn',
+            action: (element) => {
+                element.style.transitionDuration = `${duration}ms`;
+                element.classList.remove('hide');
+                element.classList.add('show');
+            }
+        });
+        return this;
+    }
+
+    function addFadeOut(duration) {
+        this._steps.push({
+            name: 'fadeOut',
+            action: (element) => {
+                element.style.transitionDuration = `${duration}ms`;
+                element.classList.remove('show');
+                element.classList.add('hide');
+            }
+        });
+        return this;
+    }
+
     function addMove(duration, translation) {
         this._steps.push({
-            name: 'move', action: (element) => {
+            name: 'move',
+            action: (element) => {
                 element.style.transitionDuration = `${duration}ms`;
                 element.style.transform = getTransform(translation, null);
             }
