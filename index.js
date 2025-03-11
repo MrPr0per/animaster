@@ -98,6 +98,7 @@ function animaster() {
     animationObject.moveAndHide = moveAndHide.bind(animationObject);
     animationObject.showAndHide = showAndHide.bind(animationObject);
     animationObject.heartBeating = heartBeating.bind(animationObject);
+    animationObject.addDelay = addDelay.bind(animationObject);
 
     animationObject.play = play.bind(animationObject);
     return animationObject;
@@ -163,8 +164,10 @@ function animaster() {
      * При этом 2/5 времени блок двигается, 3/5 — исчезает.
      */
     function moveAndHide(element, duration) {
-        move(element, duration * 2 / 5, {x: 100, y: 20});
-        setTimeout(() => fadeOut(element, duration * 3 / 5), duration * 2 / 5);
+        this
+            .addMove(duration * 2 / 5, {x: 100, y: 20})
+            .addFadeOut(duration * 3 / 5)
+            .play();
     }
 
     /**
@@ -172,8 +175,11 @@ function animaster() {
      * Каждый шаг анимации длится 1/3 от времени, переданного аргументом в функцию.
      */
     function showAndHide(element, duration) {
-        fadeIn(element, duration / 3);
-        setTimeout(() => fadeOut(element, duration / 3), duration / 3);
+        this
+            .addFadeIn(duration / 3)
+            .addDelay(duration / 3)
+            .addFadeOut(duration / 3)
+            .play();
     }
 
     /**
@@ -198,7 +204,7 @@ function animaster() {
         this._steps.push({
             name: 'fadeIn',
             duration,
-            action: (element) => {
+            action(element) {
                 element.style.transitionDuration = `${duration}ms`;
                 element.classList.remove('hide');
                 element.classList.add('show');
@@ -211,7 +217,7 @@ function animaster() {
         this._steps.push({
             name: 'fadeOut',
             duration,
-            action: (element) => {
+            action(element) {
                 element.style.transitionDuration = `${duration}ms`;
                 element.classList.remove('show');
                 element.classList.add('hide');
@@ -224,7 +230,7 @@ function animaster() {
         this._steps.push({
             name: 'move',
             duration,
-            action: (element) => {
+            action(element) {
                 element.style.transitionDuration = `${duration}ms`;
                 element.style.transform = getTransform(translation, null);
             }
@@ -236,12 +242,23 @@ function animaster() {
         this._steps.push({
             name: 'scale',
             duration,
-            action: (element) => {
+            action(element) {
                 element.style.transitionDuration = `${duration}ms`;
                 element.style.transform = getTransform(null, ratio);
             }
         });
         return this;
+    }
+
+    function addDelay(duration) {
+        this._steps.push({
+            name: 'delay',
+            action() {
+            },
+            duration,
+        });
+        return this;
+
     }
 
     function play(element) {
