@@ -6,11 +6,21 @@ function addListeners() {
             const block = document.getElementById('fadeInBlock');
             animaster().fadeIn(block, 5000);
         });
+    document.getElementById('fadeInReset')
+        .addEventListener('click', function () {
+            const block = document.getElementById('fadeInBlock');
+            animaster().resetFadeIn(block);
+        });
 
     document.getElementById('fadeOutPlay')
         .addEventListener('click', function () {
             const block = document.getElementById('fadeOutBlock');
             animaster().fadeOut(block, 5000);
+        });
+    document.getElementById('fadeOutReset')
+        .addEventListener('click', function () {
+            const block = document.getElementById('fadeOutBlock');
+            animaster().resetFadeOut(block);
         });
 
     document.getElementById('movePlay')
@@ -29,7 +39,9 @@ function addListeners() {
 function animaster() {
     return {
         fadeIn,
+        resetFadeIn,
         fadeOut,
+        resetFadeOut,
         move,
         scale,
     }
@@ -44,6 +56,13 @@ function animaster() {
         element.classList.remove('hide');
         element.classList.add('show');
     }
+
+    function resetFadeIn(element) {
+        element.style.transitionDuration = null;
+        element.classList.remove('show');
+        element.classList.add('hide');
+    }
+
     /**
      * Блок плавно появляется из прозрачного.
      * @param element — HTMLElement, который надо анимировать
@@ -51,9 +70,16 @@ function animaster() {
      */
     function fadeOut(element, duration) {
         element.style.transitionDuration = `${duration}ms`;
-        element.classList.add('hide');
         element.classList.remove('show');
+        element.classList.add('hide');
     }
+
+    function resetFadeOut(element) {
+        element.style.transitionDuration = null;
+        element.classList.remove('hide');
+        element.classList.add('show');
+    }
+
 
     /**
      * Функция, передвигающая элемент
