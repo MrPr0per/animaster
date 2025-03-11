@@ -95,6 +95,7 @@ function animaster() {
         heartBeating,
     }
     animationObject.addMove = addMove.bind(animationObject)
+    animationObject.addScale = addScale.bind(animationObject)
     animationObject.play = play.bind(animationObject)
     animationObject.addFadeIn = addFadeIn.bind(animationObject)
     animationObject.addFadeOut = addFadeOut.bind(animationObject)
@@ -147,8 +148,7 @@ function animaster() {
      * @param ratio — во сколько раз увеличить/уменьшить. Чтобы уменьшить, нужно передать значение меньше 1
      */
     function scale(element, duration, ratio) {
-        element.style.transitionDuration = `${duration}ms`;
-        element.style.transform = getTransform(null, ratio);
+        this.addScale(duration, ratio).play(element);
     }
 
     function resetMoveAndScale(element) {
@@ -223,6 +223,17 @@ function animaster() {
             action: (element) => {
                 element.style.transitionDuration = `${duration}ms`;
                 element.style.transform = getTransform(translation, null);
+            }
+        });
+        return this;
+    }
+
+    function addScale(duration, ratio) {
+        this._steps.push({
+            name: 'scale',
+            action: (element) => {
+                element.style.transitionDuration = `${duration}ms`;
+                element.style.transform = getTransform(null, ratio);
             }
         });
         return this;
