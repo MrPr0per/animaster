@@ -40,7 +40,15 @@ function addListeners() {
     document.getElementById('heartBeatingPlay')
         .addEventListener('click', function () {
             const block = document.getElementById('heartBeatingBlock');
-            animaster().heartBeating(block);
+            block.stopObj = animaster().heartBeating(block);
+        });
+
+    document.getElementById('heartBeatingStop')
+        .addEventListener('click', function () {
+            const block = document.getElementById('heartBeatingBlock');
+            if (block.stopObj) {
+                block.stopObj.stop();
+            }
         });
 }
 
@@ -125,10 +133,15 @@ function animaster() {
      * Анимация должна повторяться бесконечно.
      */
     function heartBeating(element) {
-        setInterval(() => {
+        let id = setInterval(() => {
             scale(element, 500, 1.4)
             setTimeout(() => scale(element, 500, 1), 500);
         }, 1000);
+        return {
+            stop() {
+                clearTimeout(id);
+            }
+        }
     }
 }
 
