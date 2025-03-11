@@ -140,8 +140,7 @@ function animaster() {
      * @param translation — объект с полями x и y, обозначающими смещение блока
      */
     function move(element, duration, translation) {
-        element.style.transitionDuration = `${duration}ms`;
-        element.style.transform = getTransform(translation, null);
+        this.addMove(duration, translation).play(element);
     }
 
     /**
@@ -198,18 +197,23 @@ function animaster() {
     }
 
     function addMove(duration, translation) {
-        this._steps.push({duration, translation})
+        this._steps.push({
+            name: 'move', action: (element) => {
+                element.style.transitionDuration = `${duration}ms`;
+                element.style.transform = getTransform(translation, null);
+            }
+        });
         return this;
     }
 
     function play(element) {
-        let moveParameters = this._steps.shift();
-        this.move(element, moveParameters.duration, moveParameters.translation)
+        let actionObject = this._steps.shift();
+        actionObject.action(element);
         setTimeout(() => {
             if (this._steps.length > 0) {
                 this.play(element)
             }
-        }, moveParameters.duration)
+        }, actionObject.duration)
     }
 }
 
