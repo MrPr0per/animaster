@@ -46,11 +46,16 @@ function addListeners() {
             animaster().resetMoveAndScale(block);
         });
 
-
     document.getElementById('moveAndHidePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('moveAndHideBlock');
             animaster().moveAndHide(block, 1000);
+        });
+    document.getElementById('moveAndHideReset')
+        .addEventListener('click', function () {
+            const block = document.getElementById('moveAndHideBlock');
+            animaster().resetMoveAndScale(block);
+            animaster().fadeIn(block, 0);
         });
 
     document.getElementById('showAndHidePlay')
@@ -62,7 +67,15 @@ function addListeners() {
     document.getElementById('heartBeatingPlay')
         .addEventListener('click', function () {
             const block = document.getElementById('heartBeatingBlock');
-            animaster().heartBeating(block);
+            block.stopObj = animaster().heartBeating(block);
+        });
+
+    document.getElementById('heartBeatingStop')
+        .addEventListener('click', function () {
+            const block = document.getElementById('heartBeatingBlock');
+            if (block.stopObj) {
+                block.stopObj.stop();
+            }
         });
 }
 
@@ -173,10 +186,15 @@ function animaster() {
      * Анимация должна повторяться бесконечно.
      */
     function heartBeating(element) {
-        setInterval(() => {
+        let id = setInterval(() => {
             scale(element, 500, 1.4)
             setTimeout(() => scale(element, 500, 1), 500);
         }, 1000);
+        return {
+            stop() {
+                clearTimeout(id);
+            }
+        }
     }
 
     function addMove(duration, translation) {
