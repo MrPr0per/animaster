@@ -46,11 +46,16 @@ function addListeners() {
             animaster().resetMoveAndScale(block);
         });
 
-
     document.getElementById('moveAndHidePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('moveAndHideBlock');
             animaster().moveAndHide(block, 1000);
+        });
+    document.getElementById('moveAndHideReset')
+        .addEventListener('click', function () {
+            const block = document.getElementById('moveAndHideBlock');
+            animaster().resetMoveAndScale(block);
+            animaster().fadeIn(block, 0);
         });
 
     document.getElementById('showAndHidePlay')
